@@ -8,7 +8,19 @@ set(glm_DIR "thirdparty/glm/cmake/glm/")
 find_package(glfw3 REQUIRED)
 find_package(glm REQUIRED)
 
+# Project Files 
+set(INCLUDE_DIRS 
+    "src/"
+    "thirdparty/stb/"
+    "thirdparty/glad/include"
+)
+
+set(SRC_FILES 
+    "src/main.cpp" 
+    "thirdparty/glad/src/glad.c"
+)
+
 # Application 
-add_executable(${PROJECT_NAME} "src/main.cpp" "thirdparty/glad/src/glad.c")
-target_include_directories(${PROJECT_NAME} PRIVATE "src/" "thirdparty/glad/include")
+add_executable(${PROJECT_NAME} ${SRC_FILES})
+target_include_directories(${PROJECT_NAME} PRIVATE  ${INCLUDE_DIRS})
 target_link_libraries(${PROJECT_NAME} glfw glm::glm)
