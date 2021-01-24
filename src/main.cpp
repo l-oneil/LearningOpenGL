@@ -1,3 +1,4 @@
+// Standard IO
 #include <iostream>
 
 // GLAD
@@ -15,16 +16,19 @@ const GLuint WIDTH = 800, HEIGHT = 600;
 
 const char *vertexShaderSource = "#version 330 core\n"
     "layout (location = 0) in vec3 aPos;\n"
+    "out vec4 vertexColor;"
     "void main()\n"
     "{\n"
-    "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
+    "   gl_Position = vec4(aPos, 1.0);"
+    "   vertexColor = vec4(0.5, 0.0, 0.0, 1.0);\n"
     "}\0";
 
 const char *fragmentShaderSource = "#version 330 core\n"
     "out vec4 FragColor;\n"
+    "uniform vec4 ourColor;\n"
     "void main()\n"
     "{\n"
-    "   FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
+    "   FragColor = ourColor;\n"
     "}\0";
 
 // The MAIN function, from here we start the application and run the game loop
@@ -150,32 +154,37 @@ int main() {
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);  
 
-
     // Control Draw Mode:
     // wireframe:
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     // Fill:
-    // glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
     // Game loop
-    while (!glfwWindowShouldClose(window)) {
-        // Check if any events have been activated (key pressed, mouse moved etc.) 
-        // and call corresponding response functions
-        glfwPollEvents();
-
-        // Render
-        // Clear the colorbuffer
+    while(!glfwWindowShouldClose(window))
+    {
+        // render
+        // clear the colorbuffer
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        // Draw Triangle
+        // be sure to activate the shader
         glUseProgram(shaderProgram);
+    
+        // update the uniform color
+        float timeValue = glfwGetTime();
+        float greenValue = sin(timeValue) / 2.0f + 0.5f;
+        int vertexColorLocation = glGetUniformLocation(shaderProgram, "ourColor");
+        glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
+
+        // now render the triangle
         glBindVertexArray(VAO);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
-
-        // Swap the screen buffers
+    
+        // swap buffers and poll IO events
         glfwSwapBuffers(window);
+        glfwPollEvents();
     }
 
     // Terminates GLFW, clearing any resources allocated by GLFW.
