@@ -16,3 +16,15 @@ This is just a collection of useful information and experiences with Learning Op
 2. Select: C++, OpenGL, gl v3.3, tick "Generate Loader"
 3. Click generate
 4. Download glad.zip
+
+## How to install GLM (OpenGL Mathematics)
+```bash
+    $ git clone git@github.com:g-truc/glm.git
+```
+
+Header only, so no compilation required, just need to include through CMake:
+```CMake
+    set(glm_DIR <path to glm root>/cmake/glm) # if necessary
+    find_package(glm REQUIRED)
+    target_link_libraries(<your executable> glm::glm)
+```

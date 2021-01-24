@@ -6,7 +6,7 @@
         {
             "label": "CMake Build",
             "type": "shell",
-            "command": "ninja && ./opengl_app",
+            "command": "ninja && ./opengl_app ${workspaceFolder}/src/",
             "problemMatcher": [],
             "group": {
                 "kind": "build",
