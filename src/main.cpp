@@ -86,7 +86,6 @@ int main(int argc, char **argv)
     // VAOs requires a call to glBindVertexArray anyways so we generally don't unbind VAOs (nor VBOs) when it's not directly necessary.
     // glBindVertexArray(0);
 
-
     // render loop
     // -----------
     while (!glfwWindowShouldClose(window))
@@ -100,8 +99,13 @@ int main(int argc, char **argv)
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        // render the triangle
+        // Activate the Shader 
         ourShader.use();
+
+        // Send Uniform 
+        ourShader.setFloat("off", 0.0f);
+
+        // render the triangle
         glBindVertexArray(VAO);
         glDrawArrays(GL_TRIANGLES, 0, 3);
 
