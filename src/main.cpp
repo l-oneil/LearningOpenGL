@@ -26,7 +26,8 @@ int main(int argc, char **argv)
     std::string prj_path = argv[1];
     std::string vert_path = prj_path + "src/shaders/1_vertex.shader";
     std::string frag_path = prj_path + "src/shaders/1_fragment.shader";
-    std::string text_path = prj_path + "resources/textures/container.jpg";
+    std::string tex1_path = prj_path + "resources/textures/container.jpg";
+    std::string tex2_path = prj_path + "resources/textures/awesomeface.png";
 
     // glfw: initialize and configure
     // ------------------------------
@@ -105,11 +106,11 @@ int main(int argc, char **argv)
 
     // Load Image, Store as Texure, produce MIPMAP
     // ------------------------------------
-    unsigned int texture;
-    glGenTextures(1, &texture);
+    unsigned int texture1, texture2;
+    glGenTextures(1, &texture1);
 
     // all upcoming GL_TEXTURE_2D operations now have effect on this texture object
-    glBindTexture(GL_TEXTURE_2D, texture); 
+    glBindTexture(GL_TEXTURE_2D, texture1); 
 
     // set the texture wrapping parameters
     // set texture wrapping to GL_REPEAT (default wrapping method)
@@ -120,11 +121,40 @@ int main(int argc, char **argv)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
+    // STBI Set Flip 
+    stbi_set_flip_vertically_on_load(true);  
+
     // load image, create texture and generate mipmaps
     int width, height, nrChannels;
-    unsigned char *data = stbi_load(text_path.c_str(), &width, &height, &nrChannels, 0);
+    unsigned char *data = stbi_load(tex1_path.c_str(), &width, &height, &nrChannels, 0);
     if (data) {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+        glGenerateMipmap(GL_TEXTURE_2D);
+    }
+    else {
+        std::cout << "Failed to load texture" << std::endl;
+    }
+    stbi_image_free(data);
+
+    // Texture 2
+    glGenTextures(1, &texture2);
+
+    // all upcoming GL_TEXTURE_2D operations now have effect on this texture object
+    glBindTexture(GL_TEXTURE_2D, texture2); 
+
+    // set the texture wrapping parameters
+    // set texture wrapping to GL_REPEAT (default wrapping method)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    
+    // set texture filtering parameters
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    // load image 2, create texture and generate mipmaps
+    data = stbi_load(tex2_path.c_str(), &width, &height, &nrChannels, 0);
+    if (data) {
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
         glGenerateMipmap(GL_TEXTURE_2D);
     }
     else {
@@ -146,12 +176,17 @@ int main(int argc, char **argv)
         glClear(GL_COLOR_BUFFER_BIT);
 
         // Activate the Shader 
-        glBindTexture(GL_TEXTURE_2D, texture);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, texture1);
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, texture2);
 
         // Render
         ourShader.use();
         glBindVertexArray(VAO);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        ourShader.setInt("texture1", 0);
+        ourShader.setInt("texture2", 1);
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
