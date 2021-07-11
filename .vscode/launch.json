@@ -4,26 +4,14 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
-    {
-        "type": "lldb",
-        "request": "launch",
-        "name": "Launch",
-        "program": "${workspaceFolder}/build/opengl_app",
-        "args": [],
-        "cwd": "${workspaceFolder}"
-    },
-    {
-        "name": "(lldb) Launch",
-        "type": "cppdbg",
-        "request": "launch",
-        "program": "${workspaceFolder}/build/opengl_app",
-        "args": [],
-        "targetArchitecture": "arm64",
-        "stopAtEntry": false,
-        "cwd": "${fileDirname}",
-        "environment": [],
-        "externalConsole": false,
-        "MIMode": "lldb"
-    }
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug",
+            "program": "${workspaceFolder}/build/opengl_app",
+            "args": ["${workspaceFolder}"],
+            "cwd": "${workspaceFolder}",
+            "preLaunchTask": "CMake Debug"
+        }
     ]
 }

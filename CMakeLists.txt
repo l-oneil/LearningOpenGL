@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.15)
 project(opengl_app VERSION 1.0)
 
+set(CMAKE_CXX_FLAGS_DEBUG_INIT "--debug")
+set(CMAKE_CXX_FLAGS_RELEASE_INIT "")
+
 # Set Environment Variables
 set(glm_DIR "thirdparty/glm/cmake/glm/")
 

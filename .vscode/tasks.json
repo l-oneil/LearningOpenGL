@@ -5,7 +5,7 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "CMake Build",
+            "label": "CMake Build + Run",
             "type": "shell",
             "command": "ninja && ./opengl_app ${workspaceFolder}/",
             "problemMatcher": [],
@@ -16,6 +16,19 @@
             "options": {
                 "cwd": "${workspaceFolder}/build"
               }
-        }
+        },
+        {
+            "label": "CMake Debug",
+            "type": "shell",
+            "command": "mkdir -p build && cd build && cmake -GNinja -DCMAKE_BUILD_TYPE=Debug .. && ninja",
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "options": {
+                "cwd": "${workspaceFolder}"
+              }
+        },
     ]
 }
