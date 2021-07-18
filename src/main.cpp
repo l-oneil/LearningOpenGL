@@ -108,7 +108,7 @@ int main(int argc, char **argv)
     // VAOs requires a call to glBindVertexArray anyways so we generally don't unbind VAOs (nor VBOs) when it's not directly necessary.
     // glBindVertexArray(0);
 
-    // Load Image, Store as Texure, produce MIPMAP
+    // Load Image, Store as Texture, produce MIPMAP
     // ------------------------------------
     unsigned int texture1, texture2;
     glGenTextures(1, &texture1);
