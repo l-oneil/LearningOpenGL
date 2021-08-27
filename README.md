@@ -34,3 +34,6 @@ Header only, so no compilation required, just need to include through CMake:
 ```bash
     $ wget https://raw.githubusercontent.com/nothings/stb/master/stb_image.h
 ```
+
+### ImGui
+Location: https://github.com/ocornut/imgui

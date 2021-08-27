@@ -16,11 +16,19 @@ set(INCLUDE_DIRS
     "src/"
     "thirdparty/stb/"
     "thirdparty/glad/include"
+    "thirdparty/imgui/"
+    "thirdparty/imgui/backends"
 )
 
 set(SRC_FILES 
     "src/main.cpp" 
     "thirdparty/glad/src/glad.c"
+    "thirdparty/imgui/imgui.cpp"
+    "thirdparty/imgui/imgui_draw.cpp"
+    "thirdparty/imgui/imgui_tables.cpp"
+    "thirdparty/imgui/imgui_widgets.cpp"
+    "thirdparty/imgui/backends/imgui_impl_opengl3.cpp"
+    "thirdparty/imgui/backends/imgui_impl_glfw.cpp"
 )
 
 # Application 
