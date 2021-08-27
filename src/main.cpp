@@ -51,7 +51,7 @@ int main(int argc, char **argv)
     // Grab Source Path
     std::string prj_path = argv[1];
     std::string vert_path = prj_path + "src/shaders/2_vertex.shader";
-    std::string frag_path = prj_path + "src/shaders/2_ambient.shader";
+    std::string frag_path = prj_path + "src/shaders/2_lighting.shader";
     std::string frag_path_2 = prj_path + "src/shaders/2_light_frag.shader";
 
     // glfw window creation
@@ -200,6 +200,7 @@ int main(int argc, char **argv)
         lightingShader.setVec3("objectColor", 1.0f, 0.5f, 0.31f);
         lightingShader.setVec3("lightColor",  1.0f, 1.0f, 1.0f);
         lightingShader.setVec3("lightPos", lightPos);  
+        lightingShader.setVec3("viewPos", camera.Position); 
 
         // pass projection matrix to shader (note that in this case it could change every frame)
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
