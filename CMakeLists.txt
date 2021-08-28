@@ -4,12 +4,9 @@ project(opengl_app VERSION 1.0)
 set(CMAKE_CXX_FLAGS_DEBUG_INIT "--debug")
 set(CMAKE_CXX_FLAGS_RELEASE_INIT "")
 
-# Set Environment Variables
-set(glm_DIR "thirdparty/glm/cmake/glm/")
-
 # Third Party Packages 
 find_package(glfw3 REQUIRED)
-find_package(glm REQUIRED)
+find_package(glm REQUIRED PATHS "thirdparty/glm/cmake/glm/")
 
 # Project Files 
 set(INCLUDE_DIRS 
