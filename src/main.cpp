@@ -212,6 +212,12 @@ int main(int argc, char **argv)
     unsigned int diffuseMap = loadTexture(img_path.c_str());
     unsigned int specularMap = loadTexture(specular_path.c_str());
 
+    // shader configuration
+    // --------------------
+    lightingShader.use();
+    lightingShader.setInt("material.diffuse", 0);
+    lightingShader.setInt("material.specular", 1);
+
     // render loop
     // -----------
     while (!glfwWindowShouldClose(window))
@@ -226,6 +232,8 @@ int main(int argc, char **argv)
         // -----
         processInput(window);
 
+        // ImGUI 
+        // ------
         // Show a simple window that we create ourselves. 
         // We use a Begin/End pair to created a named window.
         if (enable_imgui) {
@@ -256,52 +264,38 @@ int main(int argc, char **argv)
 
         // render
         // ------
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); 
 
-        // don't forget to use the corresponding shader program first (to set the uniform)
+        // be sure to activate shader when setting uniforms/drawing objects
         lightingShader.use();
-        lightingShader.setVec3("objectColor", 1.0f, 0.5f, 0.31f);
-        lightingShader.setVec3("lightColor",  1.0f, 1.0f, 1.0f);
-        lightingShader.setVec3("lightPos", lightPos);  
-        lightingShader.setVec3("viewPos", camera.Position); 
+        lightingShader.setVec3("light.position", lightPos);
+        lightingShader.setVec3("viewPos", camera.Position);
 
         // light properties
-        lightingShader.setVec3("light.ambient", 0.2f, 0.2f, 0.2f); 
+        lightingShader.setVec3("light.ambient", 0.2f, 0.2f, 0.2f);
         lightingShader.setVec3("light.diffuse", 0.5f, 0.5f, 0.5f);
         lightingShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
+        lightingShader.setFloat("light.constant", 1.0f);
+        lightingShader.setFloat("light.linear", 0.09f);
+        lightingShader.setFloat("light.quadratic", 0.032f);
 
-        // pass projection matrix to shader (note that in this case it could change every frame)
+        // material properties
+        lightingShader.setFloat("material.shininess", 32.0f);
+
+        // view/projection transformations
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-        lightingShader.setMat4("projection", projection);
-
-        // camera/view transformation
         glm::mat4 view = camera.GetViewMatrix();
+        lightingShader.setMat4("projection", projection);
         lightingShader.setMat4("view", view);
 
-        // Set Material Properties
-        lightingShader.setVec3("material.ambient", 1.0f, 0.5f, 0.31f);
-        lightingShader.setFloat("material.shininess", 1.0f);
-        lightingShader.setInt("material.diffuse", 0);
+        // bind diffuse map
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, diffuseMap);
-        lightingShader.setInt("material.specular", 1);
+
+        // bind specular map
         glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, specularMap); 
-
-
-        // Set Lighting Properties
-        glm::vec3 lightColor;
-        lightColor.x = sin(glfwGetTime() * 2.0f);
-        lightColor.y = sin(glfwGetTime() * 0.7f);
-        lightColor.z = sin(glfwGetTime() * 1.3f);
-        
-        glm::vec3 diffuseColor = lightColor   * glm::vec3(0.5f); 
-        glm::vec3 ambientColor = diffuseColor * glm::vec3(0.2f); 
-        
-        lightingShader.setVec3("light.ambient", ambientColor);
-        lightingShader.setVec3("light.diffuse", diffuseColor);
-        lightingShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f); 
+        glBindTexture(GL_TEXTURE_2D, specularMap);
 
         // render boxes
         glBindVertexArray(cubeVAO);
@@ -313,14 +307,15 @@ int main(int argc, char **argv)
             model = glm::translate(model, cubePositions[i]);
             model = glm::rotate(model, (float)glfwGetTime() * glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
             lightingShader.setMat4("model", model);
+
             glDrawArrays(GL_TRIANGLES, 0, 36);
         }
 
-        // Draw Light 
+        // also draw the lamp object
         lightCubeShader.use();
         lightCubeShader.setMat4("projection", projection);
-        lightCubeShader.setMat4("view", view);            
-        glm::mat4 model = glm::mat4(1.0f);
+        lightCubeShader.setMat4("view", view);
+        glm::mat4 model = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
         model = glm::translate(model, lightPos);
         model = glm::scale(model, glm::vec3(0.2f)); // a smaller cube
         lightCubeShader.setMat4("model", model);
@@ -402,6 +397,7 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
     camera.ProcessMouseScroll(yoffset);
 }
+
 
 // utility function for loading a 2D texture from file
 // ---------------------------------------------------
