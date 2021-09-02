@@ -37,3 +37,11 @@ Header only, so no compilation required, just need to include through CMake:
 
 ### ImGui
 Location: https://github.com/ocornut/imgui
+
+### ASSIMP
+```bash
+    $ cd thirdparty/assimp
+    $ mkdir build && cd build 
+    $ cmake ..
+    $ ninja
+```

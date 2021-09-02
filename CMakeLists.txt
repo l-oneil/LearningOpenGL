@@ -1,12 +1,20 @@
 cmake_minimum_required(VERSION 3.15)
 project(opengl_app VERSION 1.0)
 
-set(CMAKE_CXX_FLAGS_DEBUG_INIT "--debug")
-set(CMAKE_CXX_FLAGS_RELEASE_INIT "")
+set(COMMON_FLAGS "-Wno-invalid-offsetof")
+set(CMAKE_CXX_FLAGS "${COMMON_FLAGS}")
+set(CMAKE_CXX_FLAGS_DEBUG_INIT "--debug ${COMMON_FLAGS}")
+set(CMAKE_CXX_FLAGS_RELEASE_INIT "${COMMON_FLAGS}")
 
-# Third Party Packages 
+# Third Party Packages
 find_package(glfw3 REQUIRED)
 find_package(glm REQUIRED PATHS "thirdparty/glm/cmake/glm/")
+#TODO: fix this hack, assimp needs to be compiled separately inside: `thirdparty/assimp/build/`
+add_library(assimp SHARED IMPORTED)
+set_target_properties(assimp PROPERTIES
+  IMPORTED_LOCATION "${CMAKE_SOURCE_DIR}/thirdparty/assimp/build/code/libassimp.dylib"
+  INTERFACE_INCLUDE_DIRECTORIES "${CMAKE_SOURCE_DIR}/thirdparty/assimp/include"
+)
 
 # Project Files 
 set(INCLUDE_DIRS 
@@ -31,4 +39,4 @@ set(SRC_FILES
 # Application 
 add_executable(${PROJECT_NAME} ${SRC_FILES})
 target_include_directories(${PROJECT_NAME} PRIVATE  ${INCLUDE_DIRS})
-target_link_libraries(${PROJECT_NAME} glfw glm::glm)
+target_link_libraries(${PROJECT_NAME} glfw glm::glm assimp)
