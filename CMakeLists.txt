@@ -26,7 +26,6 @@ set(INCLUDE_DIRS
 )
 
 set(SRC_FILES 
-    "src/main.cpp" 
     "thirdparty/glad/src/glad.c"
     "thirdparty/imgui/imgui.cpp"
     "thirdparty/imgui/imgui_draw.cpp"
@@ -37,6 +36,11 @@ set(SRC_FILES
 )
 
 # Application 
-add_executable(${PROJECT_NAME} ${SRC_FILES})
+add_executable(${PROJECT_NAME} "src/main.cpp" ${SRC_FILES})
 target_include_directories(${PROJECT_NAME} PRIVATE  ${INCLUDE_DIRS})
 target_link_libraries(${PROJECT_NAME} glfw glm::glm assimp)
+
+# Depth Testing 
+add_executable(depth_testing "src/depth_testing.cpp" ${SRC_FILES})
+target_include_directories(depth_testing PRIVATE  ${INCLUDE_DIRS})
+target_link_libraries(depth_testing glfw glm::glm assimp)

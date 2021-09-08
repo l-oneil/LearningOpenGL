@@ -18,6 +18,19 @@
               }
         },
         {
+            "label": "CMake Build + Run Depth Testing",
+            "type": "shell",
+            "command": "ninja && ./depth_testing ${workspaceFolder}/",
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "options": {
+                "cwd": "${workspaceFolder}/build"
+                }
+        },
+        {
             "label": "CMake Debug",
             "type": "shell",
             "command": "mkdir -p build && cd build && cmake -GNinja -DCMAKE_BUILD_TYPE=Debug .. && ninja",

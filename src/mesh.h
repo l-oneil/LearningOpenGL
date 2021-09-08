@@ -1,7 +1,8 @@
 #ifndef MESH_H
 #define MESH_H
 
-#include <glad/glad.h> // holds all OpenGL type declarations
+// holds all OpenGL type declarations
+#include <glad/glad.h> 
 
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
@@ -65,9 +66,11 @@ public:
         for(unsigned int i = 0; i < textures.size(); i++)
         {
             glActiveTexture(GL_TEXTURE0 + i); // active proper texture unit before binding
+            
             // retrieve texture number (the N in diffuse_textureN)
             string number;
             string name = textures[i].type;
+            
             if(name == "texture_diffuse")
                 number = std::to_string(diffuseNr++);
             else if(name == "texture_specular")
@@ -79,6 +82,7 @@ public:
 
             // now set the sampler to the correct texture unit
             glUniform1i(glGetUniformLocation(shader.ID, (name + number).c_str()), i);
+
             // and finally bind the texture
             glBindTexture(GL_TEXTURE_2D, textures[i].id);
         }
