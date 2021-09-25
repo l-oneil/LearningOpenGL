@@ -44,3 +44,8 @@ target_link_libraries(${PROJECT_NAME} glfw glm::glm assimp)
 add_executable(depth_testing "src/depth_testing.cpp" ${SRC_FILES})
 target_include_directories(depth_testing PRIVATE  ${INCLUDE_DIRS})
 target_link_libraries(depth_testing glfw glm::glm assimp)
+
+# Stencil Buffer
+add_executable(stencil_buffer "src/stencil_buffer.cpp" ${SRC_FILES})
+target_include_directories(stencil_buffer PRIVATE  ${INCLUDE_DIRS})
+target_link_libraries(stencil_buffer glfw glm::glm assimp)
